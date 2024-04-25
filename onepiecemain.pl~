@@ -1,4 +1,5 @@
 % Facts about One Piece characters
+% Straw_hats_Pirates
 character(luffy, captain, straw_hats, [rubber_fruit]).
 character(zoro, swordsman, straw_hats, []).
 character(nami, navigator, straw_hats, []).
@@ -9,6 +10,7 @@ character(robin, archaeologist, straw_hats, [hana_hana_fruit]).
 character(franky, shipwright, straw_hats, []).
 character(brook, musician, straw_hats, [soul_soul_fruit]).
 
+%Blackbeard_Pirates
 character(marshall_d_teach, captain, blackbeard, [dark_dark_fruit, tremor_tremor_fruit]).
 character(laffitte, chief, blackbeard, [unconfirmed]).
 character(van_augur, sniper, blackbeard, [warp_warp_fruit]).
@@ -21,19 +23,26 @@ character(catarina_devon, titanic, blackbeard, [dog_dog_fruit]).
 character(kuzan ,titanic, blackbeard, [ice_ice_fruit]).
 character(san_juan_wold ,titanic, blackbeard, [huge_huge_fruit]).
 
+%Red_Haired_Pirates
 character(shanks, captain, red_haired_pirates, []).
 character(benn_beckman, first_mate, red_haired_pirates, []).
 character(lucky_roux, member, red_haired_pirates, []).
 character(yasopp, sniper, red_haired_pirates, []).
 character(rockstar, member, red_haired_pirates, []).
 
-character(whitebeard, captain, whitebeard_pirates, []).
+%Whitebeard_Pirates
+character(whitebeard, captain, whitebeard_pirates, [gura_gura_fruit]).
 character(marco, first_division_commander, whitebeard_pirates, [phoenix_fruit]).
 character(portgas_d_ace, second_division_commander, whitebeard_pirates, [flame_flame_fruit]).
 character(jozu, third_division_commander, whitebeard_pirates, [diamond_fruit]).
 character(vista, fourth_division_commander, whitebeard_pirates, []).
 character(thatch, fifth_division_commander, whitebeard_pirates, []).
 
+%Buggy_Pirates
+character(buggy, captain, buggy_pirates, [bara_bara_fruit]).
+character(mohji, member, buggy_pirates, []).
+character(cabaji, member, buggy_pirates, []).
+character(alvida, member, buggy_pirates, [sube_sube_fruit]).
 
 
 % Predicate to check if a character is a captain
@@ -153,6 +162,21 @@ process_input(7) :-
     nl,
     main_menu.
 process_input(8) :-
+    writeln('Enter the character name: '),
+    read_line_to_codes(user_input, CharacterCodes),
+    atom_codes(CharacterAtom, CharacterCodes),
+    writeln('All information about the character:'),
+    search_character_info(CharacterAtom),
+    nl,
+    main_menu.
+process_input(9) :-
+    writeln('Enter the role name (e.g., captain, sniper, doctor): '),
+    read_line_to_codes(user_input, RoleCodes),
+    atom_codes(RoleAtom, RoleCodes),
+    find_characters_with_role(RoleAtom),
+    nl,
+    main_menu.
+process_input(10) :-
     writeln('Exiting...').
 
 % Predicate to process captain query
@@ -186,6 +210,23 @@ process_get_role(Character) :-
 process_get_devil_fruit(Character) :-
     writeln('Devil Fruit of the character:'),
     get_devil_fruit(Character).
+
+% Predicate to find characters with a specific role
+find_characters_with_role(Role) :-
+    character(Character, Role, _, _),
+    write(Character),
+    nl,
+    fail. % Backtrack to find more characters
+find_characters_with_role(_). % End of search
+
+
+% Predicate to search all information about a character
+search_character_info(Character) :-
+    character(Character, Role, Crew, DevilFruits),
+    write('Name: '), writeln(Character),
+    write('Role: '), writeln(Role),
+    write('Crew: '), writeln(Crew),
+    write('Devil Fruits: '), writeln(DevilFruits).
 
 % Entry point
 start :-

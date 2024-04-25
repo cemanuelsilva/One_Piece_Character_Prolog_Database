@@ -93,9 +93,11 @@ main_menu :-
     writeln('5. Get the crew of a character'),
     writeln('6. Get the role of a character'),
     writeln('7. Get the Devil Fruit of a character'),
-    writeln('8. Exit'),
+    writeln('8. Get the Details of a character'),
+    writeln('9. Show all characters with a role'),
+    writeln('10. Exit'),
     nl,
-    write('Insert your choice (1-8): '),
+    write('Insert your choice (1-10): '),
     read_choice.
 
 % Read choice and process input
@@ -162,6 +164,21 @@ process_input(7) :-
     nl,
     main_menu.
 process_input(8) :-
+    writeln('Enter the character name: '),
+    read_line_to_codes(user_input, CharacterCodes),
+    atom_codes(CharacterAtom, CharacterCodes),
+    writeln('All information about the character:'),
+    search_character_info(CharacterAtom),
+    nl,
+    main_menu.
+process_input(9) :-
+    writeln('Enter the role name (e.g., captain, sniper, doctor): '),
+    read_line_to_codes(user_input, RoleCodes),
+    atom_codes(RoleAtom, RoleCodes),
+    find_characters_with_role(RoleAtom),
+    nl,
+    main_menu.
+process_input(10) :-
     writeln('Exiting...').
 
 % Predicate to process captain query
@@ -195,6 +212,23 @@ process_get_role(Character) :-
 process_get_devil_fruit(Character) :-
     writeln('Devil Fruit of the character:'),
     get_devil_fruit(Character).
+
+% Predicate to find characters with a specific role
+find_characters_with_role(Role) :-
+    character(Character, Role, _, _),
+    write(Character),
+    nl,
+    fail. % Backtrack to find more characters
+find_characters_with_role(_). % End of search
+
+
+% Predicate to search all information about a character
+search_character_info(Character) :-
+    character(Character, Role, Crew, DevilFruits),
+    write('Name: '), writeln(Character),
+    write('Role: '), writeln(Role),
+    write('Crew: '), writeln(Crew),
+    write('Devil Fruits: '), writeln(DevilFruits).
 
 % Entry point
 start :-
