@@ -69,7 +69,7 @@ character(charlotte_daifuku, minister, big_mom_pirates, [hoya_hoya_fruit], 300_0
 character(charlotte_compote, minister, big_mom_pirates, [], 0).
 character(charlotte_mont-dor, minister, big_mom_pirates, [buku_buku_fruit], 120_000_000).
 character(charlotte_galette, minister, big_mom_pirates, [bata_bata_fruit], 0).
-character(charlotte_broy�, minister, big_mom_pirates, [], 0).
+character(charlotte_broy, minister, big_mom_pirates, [], 0).
 character(charlotte_bavarois, minister, big_mom_pirates, [], 0).
 character(charlotte_pudding, minister, big_mom_pirates, [mema_mema_fruit], 0).
 character(zeus, homie, big_mom_pirates, [], 0).
@@ -93,6 +93,31 @@ character(holdem, headliner, beast_pirates, [lion_smile_fruit], 0).
 character(speed, headliner, beast_pirates, [horse_smile_fruit], 0).
 character(babanuki, headliner, beast_pirates, [elephant_smile_fruit], 0).
 
+% Ligações diretas entre personagens
+ligacao(luffy, zoro).
+ligacao(zoro, sanji).
+ligacao(luffy, shanks).
+ligacao(shanks, buggy).
+ligacao(marshall_d_teach, kuzan).
+
+% Alianças diretas entre tripulações
+alianca(straw_hats, heart_pirates).
+alianca(straw_hats, minks).
+alianca(heart_pirates, law).
+alianca(minks, inuarashi).
+
+% Predicados recursivos para encontrar ligações indiretas
+ligacao_indireta(X, Y) :- ligacao(X, Y).
+ligacao_indireta(X, Y) :- ligacao(X, Z), ligacao_indireta(Z, Y).
+
+% Predicados recursivos para encontrar alianças indiretas
+alianca_indireta(Crew, Alliance) :- alianca(Crew, Alliance).
+alianca_indireta(Crew, Alliance) :- alianca(Crew, X), alianca_indireta(X, Alliance).
+
+list_alliances([]).
+list_alliances([Alliance|Rest]) :-
+    writeln(Alliance),
+    list_alliances(Rest).
 
 % Predicate to check if a character is a captain
 is_captain(Character) :-
@@ -180,8 +205,9 @@ main_menu :-
     writeln('11. Show all characters from a crew'),
     writeln('12. Show all roles'),
     writeln('13. Show top 10 highest bounties'),
-    writeln('14. Exit'),
-    write('Insert your choice (1-14): '),
+    writeln('14. Show all indirect alliances for a crew'),
+    writeln('15. Exit'),
+    write('Insert your choice (1-15): '),
     read_choice.
 
 % Read choice and process input
@@ -308,6 +334,16 @@ process_input(13) :-
     nl,
     main_menu.
 process_input(14) :-
+    nl,
+    writeln('Enter the crew name: '),
+    read_line_to_codes(user_input, CrewCodes),
+    atom_codes(CrewAtom, CrewCodes),
+    writeln('Indirect alliances of the crew:'),
+    findall(Alliance, alianca_indireta(CrewAtom, Alliance), Alliances),
+    list_alliances(Alliances),
+    nl,
+    main_menu.
+process_input(15) :-
     nl,
     writeln('Exiting...').
 
