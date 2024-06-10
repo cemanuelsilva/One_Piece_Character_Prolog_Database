@@ -1,5 +1,5 @@
 % Facts about One Piece characters
-% Straw_hats_Pirates
+%Straw_hats_Pirates
 character(luffy, captain, straw_hats, [rubber_fruit], 3_000_000_000).
 character(zoro, swordsman, straw_hats, [], 1_111_000_000).
 character(nami, navigator, straw_hats, [], 366_000_000).
@@ -57,7 +57,7 @@ character(mohji, member, cross_guild, [], 0).
 character(cabaji, member, cross_guild, [], 0).
 character(alvida, member, cross_guild, [sube_sube_fruit], 5_000_000).
 
-% Big_Mom_Pirates
+%Big_Mom_Pirates
 character(charlotte_lilin, captain, big_mom_pirates, [soru_soru_fruit], 4_388_000_000).
 character(charlotte_katakuri, sweet_commander, big_mom_pirates, [mochi_mochi_fruit], 1_057_000_000).
 character(charlotte_smoothie, sweet_commander, big_mom_pirates, [shibo_shibo_fruit], 932_000_000).
@@ -93,6 +93,9 @@ character(holdem, headliner, beast_pirates, [lion_smile_fruit], 0).
 character(speed, headliner, beast_pirates, [horse_smile_fruit], 0).
 character(babanuki, headliner, beast_pirates, [elephant_smile_fruit], 0).
 
+%Roger_Pirates
+character(gol_d_roger, captain, roger_pirates, [], 5_564_800_000).
+
 % Ligações diretas entre personagens
 ligacao(luffy, zoro).
 ligacao(zoro, sanji).
@@ -103,8 +106,13 @@ ligacao(marshall_d_teach, kuzan).
 % Alianças diretas entre tripulações
 alianca(straw_hats, heart_pirates).
 alianca(straw_hats, minks).
-alianca(heart_pirates, law).
 alianca(minks, inuarashi).
+
+alianca(straw_hats, kuja_pirates).
+alianca(red_haired_pirates, whitebeard_pirates).
+alianca(big_mom_pirates, beast_pirates).
+alianca(heart_pirates, kid_pirates).
+alianca(straw_hats, kid_pirates).
 
 % Predicados recursivos para encontrar ligações indiretas
 ligacao_indireta(X, Y) :- ligacao(X, Y).
@@ -159,6 +167,24 @@ get_devil_fruit(Character) :-
 get_bounty(Character) :-
     character(Character, _, _, _, Bounty),
     writeln(Bounty).
+
+
+% Predicate to search all information about a character
+search_character_info(Character) :-
+    character(Character, Role, Crew, DevilFruits,Bounty),
+    write('Name: '), writeln(Character),
+    write('Role: '), writeln(Role),
+    write('Crew: '), writeln(Crew),
+    write('Devil Fruits: '), writeln(DevilFruits),
+    write('Bounty: '), writeln(Bounty).
+
+% Predicate to find characters with a specific role
+find_characters_with_role(Role) :-
+    character(Character, Role, _, _,_),
+    write(Character),
+    nl,
+    fail. % Backtrack to find more characters
+find_characters_with_role(_). % End of search
 
 % Predicate to show all roles
 show_all_roles :-
@@ -383,23 +409,6 @@ process_get_devil_fruit(Character) :-
     writeln('Devil Fruit of the character:'),
     get_devil_fruit(Character).
 
-% Predicate to find characters with a specific role
-find_characters_with_role(Role) :-
-    character(Character, Role, _, _,_),
-    write(Character),
-    nl,
-    fail. % Backtrack to find more characters
-find_characters_with_role(_). % End of search
-
-
-% Predicate to search all information about a character
-search_character_info(Character) :-
-    character(Character, Role, Crew, DevilFruits,Bounty),
-    write('Name: '), writeln(Character),
-    write('Role: '), writeln(Role),
-    write('Crew: '), writeln(Crew),
-    write('Devil Fruits: '), writeln(DevilFruits),
-    write('Bounty: '), writeln(Bounty).
 
 % Entry point
 start :-
